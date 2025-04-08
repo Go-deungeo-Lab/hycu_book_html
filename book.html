@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모순 - 양귀자</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary-color: #5e60ce;
+            --secondary-color: #5390d9;
+            --accent-color: #48bfe3;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            background-image:
+                    radial-gradient(circle at 10% 20%, rgba(94, 96, 206, 0.03) 0%, rgba(94, 96, 206, 0) 20%),
+                    radial-gradient(circle at 90% 80%, rgba(72, 191, 227, 0.03) 0%, rgba(72, 191, 227, 0) 20%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* 헤더 스타일 */
+        .hero {
+            height: 100vh;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .book-title {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            font-family: 'Noto Serif KR', serif;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            display: inline-block;
+        }
+
+        .book-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
+        .author {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            max-width: 600px;
+            opacity: 0.8;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            opacity: 0.7;
+            transition: var(--transition);
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .scroll-down:hover {
+            opacity: 1;
+        }
+
+        .scroll-down span {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .scroll-indicator {
+            width: 30px;
+            height: 50px;
+            border: 2px solid white;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            animation: scrollAnim 2s infinite;
+        }
+
+        @keyframes scrollAnim {
+            0% { top: 8px; opacity: 1; }
+            100% { top: 30px; opacity: 0; }
+        }
+
+        /* 내비게이션 */
+        .navbar {
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            margin-left: 30px;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--gradient-accent);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 섹션 공통 스타일 */
+        .section {
+            padding: 100px 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--dark-color);
+            font-family: 'Noto Serif KR', serif;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: var(--gradient-primary);
+        }
+
+        /* 책 소개 섹션 */
+        .intro-section {
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            max-width: 1100px;
+        }
+
+        .intro-header {
+            background: var(--gradient-primary);
+            padding: 40px;
+            color: white;
+        }
+
+        .intro-header h2 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .intro-header p {
+            opacity: 0.9;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .intro-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .book-cover {
+            position: relative;
+            transition: var(--transition);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transition: var(--transition);
+        }
+
+        .book-cover:hover img {
+            transform: rotateY(5deg) translateZ(10px);
+            box-shadow: -10px 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .book-summary {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .book-metadata {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .metadata-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metadata-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .metadata-value {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        /* 목차 섹션 */
+        .toc-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .toc-header {
+            background: var(--gradient-accent);
+            padding: 40px;
+            color: white;
+        }
+
+        .toc-content {
+            padding: 40px;
+        }
+
+        .toc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            counter-reset: toc-counter;
+            padding: 0;
+            list-style: none;
+        }
+
+        .toc-item {
+            counter-increment: toc-counter;
+            position: relative;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px 20px 20px 70px;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .toc-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background-color: #f0f4ff;
+        }
+
+        .toc-item::before {
+            content: counter(toc-counter);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* 독서 노트 섹션 */
+        .notes-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .notes-header {
+            background: var(--gradient-primary);
+            padding: 40px;
+            color: white;
+        }
+
+        .notes-content {
+            padding: 40px;
+        }
+
+        .favorite-quotes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .quote-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+            border-image: var(--gradient-primary);
+            border-image-slice: 1;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 5rem;
+            font-family: 'Noto Serif KR', serif;
+            color: var(--primary-color);
+            opacity: 0.1;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-source {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* 음악 섹션 */
+        .music-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .music-header {
+            background: var(--gradient-accent);
+            padding: 40px;
+            color: white;
+        }
+
+        .music-content {
+            padding: 40px;
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .music-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .music-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .music-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .music-card:hover .music-image {
+            transform: scale(1.05);
+        }
+
+        .music-info {
+            padding: 20px;
+        }
+
+        .music-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .music-composer {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .music-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* 캐릭터 섹션 */
+        .character-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .character-header {
+            background: var(--gradient-primary);
+            padding: 40px;
+            color: white;
+        }
+
+        .character-content {
+            padding: 40px;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .character-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .character-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .character-info {
+            padding: 20px;
+        }
+
+        .character-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .character-role {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .character-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* 푸터 */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            padding: 0 30px;
+        }
+
+        .footer-about h3 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-about p {
+            opacity: 0.7;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4, .footer-social h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .footer-links h4::after, .footer-social h4::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+        }
+
+        .footer-links ul, .footer-social ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li, .footer-social li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a, .footer-social a {
+            color: white;
+            opacity: 0.7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover, .footer-social a:hover {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 40px auto 0;
+            padding: 20px 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* 애니메이션 효과 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 다크 모드 토글 */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .dark-mode-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* 인용 스타일 */
+        blockquote {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin: 40px 0;
+            padding: 20px 30px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            position: relative;
+        }
+
+        blockquote::before {
+            content: '"';
+            position: absolute;
+            top: 0;
+            left: 10px;
+            font-size: 3rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+        }
+
+        /* 반응형 */
+        @media (max-width: 991px) {
+            .intro-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .book-cover {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .book-title {
+                font-size: 3.5rem;
+            }
+
+            .author {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            .toc-list, .favorite-quotes, .music-grid, .character-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                padding: 15px 20px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .nav-links a {
+                margin-left: 0;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더/히어로 섹션 -->
+<div class="hero">
+    <div class="hero-content">
+        <h1 class="book-title">모순</h1>
+        <p class="author">양귀자</p>
+    </div>
+    <div class="scroll-down">
+        <span>아래로 스크롤</span>
+        <div class="scroll-indicator"></div>
+    </div>
+</div>
+
+<!-- 내비게이션 바 -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">모순</div>
+        <div class="nav-links">
+            <a href="#intro">책 소개</a>
+            <a href="#characters">등장인물</a>
+            <a href="#toc">목차</a>
+            <a href="#notes">독서 노트</a>
+            <a href="#music">음악</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 책 소개 섹션 -->
+<section class="section" id="intro">
+    <div class="intro-section fade-in">
+        <div class="intro-header">
+            <h2>책 소개</h2>
+            <p>양귀자의 대표작 '모순'에 대한 소개와 배경</p>
+        </div>
+        <div class="intro-content">
+            <div class="book-cover">
+                <img src="./public/img.png" alt="모순 - 양귀자 책 표지">
+            </div>
+            <div class="book-details">
+                <div class="book-summary">
+                    <p>『모순』은 작가 양귀자가 1998년 펴낸 세 번째 장편소설로, 책이 나온 지 한 달 만에 무서운 속도로 베스트셀러 1위에 진입, 출판계를 놀라게 하고 그해 최고의 베스트셀러로 자리 잡으면서 ‘양귀자 소설의 힘’을 다시 한 번 유감없이 보여준 소설이다.
+
+                        초판이 나오고 긴 시간이 흘렀지만『모순』은 아주 특별한 길을 걷고 있다. 그때 20대였던 독자들은 지금도 가끔씩『모순』을 꺼내 다시 읽는다고 했다. 다시 읽을 때마다 전에는 몰랐던 소설 속 행간의 의미를 깨우치거나 세월의 힘이 알려준 다른 해석에 놀라면서 “내 인생의 가장 소중한 책 한 권”으로 꼽는 것을 주저하지 않는다. 『모순』이 특별한 것은 대다수의 독자들이 한 번만 읽고 마는 것이 아니라 적어도 두 번, 혹은 세 번 이상 되풀이 읽고 있다는 사실에 있다.
+
+                        『모순』을 열 번도 더 읽었다는 블로그 독후감도 종종 만난다. 열성 독자들은 끊임없이 소설 속 문장들을 기록하고 전달하고 반추하며 흔적을 남기고 있다. 이 소설이 지금까지도 끊임없이 독자들에게 회자되고 있는 힘은 참 불가사의하다.
+
+                        시간이 흘러도, 시간이 흐를수록 더욱 많은 독자들이 읽고 있는『모순』이 교보문고 리커버:K 한정판으로 다시 나온다. 읽고 또 읽어 주는 독자들을 위한 출판사의 헌정판이기도 하다.</p>
+                </div>
+                <blockquote>
+                    인생은 탐구하면서 살아가는 것이 아니라, 살아가면서 탐구하는 것이다.
+                    실수는 되풀이된다. 그것이 인생이다…….
+                </blockquote>
+
+                <div class="book-metadata">
+
+                    <div class="metadata-item">
+                        <span class="metadata-label">출판사</span>
+                        <span class="metadata-value">쓰다</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">출판일</span>
+                        <span class="metadata-value">
+1998년 6월 27일(1판) </br>
+2013년 4월 1일(2판)</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">페이지</span>
+                        <span class="metadata-value">308쪽</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">ISBN</span>
+                        <span class="metadata-value">
+9788998441012</span>
+                    </div>
+
+                </div>
+                <div class="book-purchase">
+                    <style>
+                        .book-purchase {
+                            margin-top: 30px;
+                            text-align: center;
+                        }
+
+                        .purchase-button {
+                            display: inline-block;
+                            background: var(--gradient-primary);
+                            color: white;
+                            padding: 15px 30px;
+                            border-radius: 50px;
+                            font-weight: 600;
+                            text-decoration: none;
+                            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                            border: none;
+                            cursor: pointer;
+                        }
+
+                        .purchase-button:hover {
+                            transform: translateY(-3px);
+                            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                        }
+
+                        .purchase-button svg {
+                            margin-right: 10px;
+                            vertical-align: middle;
+                        }
+                    </style>
+
+                    <a href="https://product.kyobobook.co.kr/detail/S000001632467" target="_blank" rel="noopener noreferrer" class="purchase-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        교보문고에서 구매하기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 등장인물 섹션 -->
+<section class="section" id="characters">
+    <div class="character-section fade-in">
+        <div class="character-header">
+            <h2>등장인물</h2>
+            <p>소설 속 주요 인물들</p>
+        </div>
+        <div class="character-content">
+            <style>
+                .character-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 30px;
+                }
+
+                .character-card {
+                    background-color: #f8f9fa;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    transition: var(--transition);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                    border-top: 4px solid transparent;
+                    border-image: var(--gradient-primary);
+                    border-image-slice: 1;
+                    padding: 25px;
+                }
+
+                .character-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                }
+
+                .character-name {
+                    font-weight: 700;
+                    font-size: 1.4rem;
+                    margin-bottom: 8px;
+                    color: var(--primary-color);
+                }
+
+                .character-role {
+                    font-size: 0.95rem;
+                    color: #6c757d;
+                    margin-bottom: 15px;
+                    font-style: italic;
+                    border-bottom: 1px solid #e9ecef;
+                    padding-bottom: 12px;
+                }
+
+                .character-description {
+                    font-size: 0.95rem;
+                    line-height: 1.7;
+                }
+            </style>
+
+            <div class="character-grid">
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">안진진</h3>
+                        <p class="character-role">소설의 주인공</p>
+                        <p class="character-description">소설의 주인공으로, 25세의 미혼 여성인 안진진은 직장 생활을 하면서 겉으로는 평범하고 안정된 삶을 살지만, 내면에는 깊은 상처와 모순이 자리 잡고 있죠. 특히 가족과의 갈등, 그리고 사랑 속에서의 고뇌가 그녀를 끊임없이 괴롭힙니다. 진진은 아버지의 폭력과 방황, 어머니의 냉혹함 속에서 성장했고, 두 남자, 나염규와 김장우 사이에서 감정적 충족과 현실적 안정을 동시에 추구하지만, 결내 두 사람 모두 그녀를 완벽하게 만족시키지 못합니다. 진진은 자신의 삶을 통해 끊임없이 모순과 갈등을 직면하고 그것을 이해하려고 합니다.</p>
+                    </div>
+                </div>
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">어머니</h3>
+                        <p class="character-role">안진진의 어머니</p>
+                        <p class="character-description">주인공의 어머니는 이모와 일란성 쌍둥이입니다. 현실적이고 강한 여성으로, 아버지의 폭력과 무책임한 행동 속에서 속옷, 양말 등을 팔며 가정을 지키기 위해 애쓰는 인물이죠. 인생에 우여곡절이 닥치면 그에 맞서기 위해 관련분야 책을 읽고 특유의 과장법으로 삶을 헤쳐 나갑니다.</p>
+                    </div>
+                </div>
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">아버지</h3>
+                        <p class="character-role">안진진의 아버지</p>
+                        <p class="character-description">주인공의 아버지는 가정 내에서 폭력을 행사하는 알코올 의존증 환자입니다. 술에 취해 어머니를 때리고 집을 떠나 방황하다가 다시 돌아오기를 반복하는 그는, 진진의 어린 시절부터 성인이 된 이후까지 가족에게 지속적인 불안과 혼란을 안겨줍니다. 그의 존재는 진진이 사랑과 가족에 대한 복잡한 감정을 갖게 만드는 중요한 요소로 작용하게 되며, 주인공이 스물 다섯이 된 시점에 증폭과 치매로 이전과는 완전히 다른 모습이 되어 집에 돌아옵니다.</p>
+                    </div>
+                </div>
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">안진모</h3>
+                        <p class="character-role">안진진의 동생</p>
+                        <p class="character-description">진모는 진진의 동생으로, 법칙을 저지르고 감옥에 가게 되는 문제적 인물입니다. 그는 가족 내에서 문제아로, 방황하고 삶의 방향성을 찾지 못한 채 건달 흉내를 내며 살아갑니다. 진모는 가족에게 짐이 되기도 하지만, 동시에 진진에게는 동생으로서 책임감을 느끼게 하는 존재입니다. 그의 불안정한 삶은 가족 내 갈등을 더 심화시키며, 진진이 가족의 문제와 자신이 처한 모순을 직시하게 만듭니다.</p>
+                    </div>
+                </div>
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">이모</h3>
+                        <p class="character-role">안진진의 이모</p>
+                        <p class="character-description">주인공의 어머니와 일란성 쌍둥이인 이모는 진진에게 감정적으로 큰 지지와 위로를 주는 인물입니다. 어머니의 강압적이고 냉혹한 태도와는 달리, 이모는 진진을 따뜻하게 감싸주며 그녀의 고민을 이해하고 들어주는 역할을 하죠. 이모는 진진이 가족 내에서 느끼는 상처를 보듬어 주는 인물로, 그녀가 어머니와의 갈등 속에서 이모를 통해 안정을 찾기도 합니다.</p>
+                    </div>
+                </div>
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">나영규</h3>
+                        <p class="character-role">안진진의 남자친구</p>
+                        <p class="character-description">나염규는 주인공의 남자친구 중 한 명으로, 현실적이고 안정적인 성격을 가진 남자입니다. 그는 경제적으로나 사회적으로 안정된 삶을 살고 있으며, 진진에게 현실적인 안정을 제공하려 합니다. 하지만 그는 계산적이고 인생의 모든 것을 계획대로 해야 하는 성격의 소유자입니다. 그의 그런 성향은 진진에게 불만을 안겨주며, 두 사람의 관계가 점차 멀어지게 되는 요인으로 작용하죠. 나염규는 진진에게 현실적인 안정감을 주지만, 감정적으로는 그녀를 충분히 만족시키지 못하는 인물로, 진진에게 사랑 속에서 느끼는 모순을 깨닫게 합니다.</p>
+                    </div>
+                </div>
+                <div class="character-card">
+                    <div class="character-info">
+                        <h3 class="character-name">김장우</h3>
+                        <p class="character-role">안진진의 또 다른 남자친구</p>
+                        <p class="character-description">김장우는 주인공의 또 다른 남자친구로, 진진에게 감정적인 충만함을 제공하는 인물이죠. 사진작가인 그는 감성적이고 열정적이며, 진진을 사랑하는 방식도 매우 감정적입니다. 진진은 그와의 관계에서 감정적인 충족감을 느끼지만, 김장우는 현실적인 면에서 불안정한 요소를 가지고 있어 두 사람의 관계 또한 완벽하지는 않습니다. 김장우는 진진에게 감정적으로 나염규 보다는 좀 더 깊은 유대감을 주지만, 현실적인 부분에서는 모순을 안고 있는 인물로, 진진은 그와의 관계에서도 결국 갈등을 느끼게 됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 목차 섹션 -->
+<section class="section" id="toc">
+    <div class="toc-section fade-in">
+        <div class="toc-header">
+            <h2>목차</h2>
+            <p>소설의 구성과 이야기의 흐름</p>
+        </div>
+        <div class="toc-content">
+            <ul class="toc-list">
+                <li class="toc-item">생의 외침</li>
+                <li class="toc-item">거짓말들</li>
+                <li class="toc-item">사람이 있는 풍경</li>
+                <li class="toc-item">슬픈 일몰의 아버지</li>
+                <li class="toc-item">희미한 사랑의 그림자</li>
+                <li class="toc-item">오래전, 그 십 분의 의미</li>
+                <li class="toc-item">불행의 과장법</li>
+                <li class="toc-item">착한 주리</li>
+                <li class="toc-item">선운사 도솔암 가는 길에</li>
+                <li class="toc-item">사랑에 관한 세 가지 메모</li>
+                <li class="toc-item">사랑에 관한 네 번째 메모</li>
+                <li class="toc-item">참을 수 없는, 너무나 참을 수 없는</li>
+                <li class="toc-item">헤어진 다음날</li>
+                <li class="toc-item">크리스마스 선물</li>
+                <li class="toc-item">씁쓸하고도 달콤한</li>
+                <li class="toc-item">편지</li>
+                <li class="toc-item">모순</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="notes">
+    <div class="notes-section fade-in">
+        <div class="notes-header">
+            <h2>나의 독서 노트</h2>
+            <p>책을 읽으며 느낀 생각과 마음에 남은 구절들</p>
+        </div>
+        <div class="notes-content">
+            <style>
+                .chapter-quotes {
+                    margin-bottom: 60px;
+                }
+
+                .chapter-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    margin-bottom: 20px;
+                    color: var(--primary-color);
+                    display: flex;
+                    align-items: center;
+                }
+
+                .chapter-title::before {
+                    content: attr(data-chapter);
+                    display: inline-block;
+                    width: 30px;
+                    height: 30px;
+                    background: var(--gradient-primary);
+                    color: white;
+                    border-radius: 50%;
+                    margin-right: 15px;
+                    text-align: center;
+                    line-height: 30px;
+                    font-size: 1rem;
+                }
+
+                .chapter-quotes .quote-card {
+                    margin-bottom: 20px;
+                }
+
+                .chapter-quotes .quote-card:last-child {
+                    margin-bottom: 0;
+                }
+            </style>
+
+            <!-- 예시 구조: 직접 내용을 추가하실 수 있습니다 -->
+            <div class="chapter-quotes">
+                <h3 class="chapter-title" data-chapter="1">생의외침</h3>
+                <div class="quote-card">
+                    <p class="quote-text">인생은 탐구하는것이 아니라 받아들이는것</p>
+                    <p class="quote-text">그러나, 그러나, 이말은 어떤가.
+                        우리들은 남이행복하지 않은것은 당연하게 생각하고
+                        자기자신이 행복하지 않는 것에 대해서는 언제나 납득할수 없어한다.</p>
+                    <p class="quote-text">나의 인생에 있어 '나'는 당연히 행복해야 할 존재였다. </p>
+                </div>
+                <!-- 필요하다면 같은 장에 더 많은 인용문 카드를 추가할 수 있습니다 -->
+            </div>
+
+            <!-- 다른 장에 대한 인용문도 같은 구조로 추가할 수 있습니다 -->
+            <div class="chapter-quotes">
+                <h3 class="chapter-title" data-chapter="2">사람이 있는풍경</h3>
+                <div class="quote-card">
+                    <p class="quote-text">동전은 넘치도록 많은데, 뒤에서 빨리 끊어달라고 재촉하는 사람도 없는데, 조용조용 꽃가지를 흔들고있는 라일락은 저리도 아름다운데, 밤공기 속에 흩어지는 이 라일락 향기는 참을 수 없을만큼 은은하기만 한데...</p>
+                </div>
+            </div>
+
+            <div class="chapter-quotes">
+                <h3 class="chapter-title" data-chapter="2">슬픈 일몰의 아버지</h3>
+                <div class="quote-card">
+                    <p class="quote-text">왜 그렇게 눈물이 쏟아지는지 몰라 안진진
+                        환한 낮이가고 어둔 밤이 오는 그 중간 시간에 하늘을 떠도는 쌉싸름한 냄새를 혹시 맡아본적 있니? 낮도 아니고 밤도 아닌
+                        그시간, 주위는 푸른어둠에 물들고, 쌉사름한 집 냄새는 어디선가 풍겨오고.</p>
+                    <p class="quote-text">아마도 아버지는 슬픈 일몰에서조차 꿈쩍하지 않을 내성을 갖게 된 모양이었다.</p>
+                </div>
+            </div>
+
+            <div class="chapter-quotes">
+                <h3 class="chapter-title" data-chapter="2">사랑에 관한 세가지 메모</h3>
+                <div class="quote-card">
+                    <p class="quote-text">사랑이란 그러므로 붉은 신호등이다. 켜지기만 하면
+                        무조건 멈춰야하는, 위험을 예고하면서 동시에 안전도 예고하는 붉은신호등이 바로 사랑이다.</p>
+                </div>
+            </div>
+
+            <div class="chapter-quotes">
+                <h3 class="chapter-title" data-chapter="2">모순</h3>
+                <div class="quote-card">
+                    <p class="quote-text">마지막으로 한마디, 일년전쯤 내가 한 말을 수정한다.
+                    인생은 탐구하면서 살아가는 것이 아니라, 살아가면서 탐구하는 것이다. 실수는 되풀이 된다. 그것이 인생이다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 음악 섹션 -->
+<!-- 음악 섹션 -->
+<section class="section" id="music">
+    <div class="music-section fade-in">
+        <div class="music-header">
+            <h2>이 책 읽으며 들은 노래</h2>
+            <p>이야기와 함께 어울리는 음악들</p>
+        </div>
+        <div class="music-content">
+            <style>
+                .music-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                    gap: 30px;
+                }
+
+                .music-card {
+                    background-color: #f8f9fa;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    transition: var(--transition);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                }
+
+                .music-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                }
+
+                .youtube-link {
+                    display: block;
+                    position: relative;
+                    width: 100%;
+                    padding-bottom: 56.25%; /* 16:9 비율 */
+                    background-color: #000;
+                    overflow: hidden;
+                }
+
+                .youtube-link img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                }
+
+                .youtube-link:hover img {
+                    transform: scale(1.05);
+                }
+
+                .youtube-link::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 60px;
+                    height: 60px;
+                    background-color: rgba(255, 0, 0, 0.8);
+                    border-radius: 50%;
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 24px;
+                    z-index: 10;
+                }
+
+                .music-info {
+                    padding: 20px;
+                }
+
+                .music-title {
+                    font-weight: 700;
+                    font-size: 1.2rem;
+                    margin-bottom: 10px;
+                    color: var(--dark-color);
+                }
+
+                .music-composer {
+                    font-size: 0.9rem;
+                    color: #6c757d;
+                    margin-bottom: 15px;
+                }
+
+                .music-description {
+                    font-size: 0.95rem;
+                    line-height: 1.7;
+                }
+            </style>
+
+            <div class="music-grid">
+                <div class="music-card">
+                    <a href="https://www.youtube.com/watch?v=caR7C2SHdFI" class="youtube-link" target="_blank" rel="noopener noreferrer">
+                        <!-- 유튜브 썸네일 URL -->
+                        <img src="https://img.youtube.com/vi/caR7C2SHdFI/maxresdefault.jpg" alt="라흐마니노프 피아노 협주곡 썸네일">
+                    </a>
+                    <div class="music-info">
+                        <h3 class="music-title">라흐마니노프: 피아노 협주곡 2번 C단조</h3>
+                        <p class="music-composer">라흐마니노프</p>
+                        <p class="music-description">안진진이 서술하는 본인의 삶과 제일 잘 어울리는 노래</p>
+                    </div>
+                </div>
+
+                <div class="music-card">
+                    <a href="https://www.youtube.com/watch?v=XvGQyJ-bzbo" class="youtube-link" target="_blank" rel="noopener noreferrer">
+                        <img src="https://img.youtube.com/vi/XvGQyJ-bzbo/maxresdefault.jpg" alt="리스트 사랑의 꿈 썸네일">
+                    </a>
+                    <div class="music-info">
+                        <h3 class="music-title">리스트: 사랑의 꿈 3번</h3>
+                        <p class="music-composer">리스트</p>
+                        <p class="music-description">안진진과 김장우의 관계 그리고 안진진의 이모와 제일 잘 어울리는 테마 곡</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- 푸터 섹션 -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-about">
+            <h3>모순 - 양귀자</h3>
+            <p>이 웹페이지는 양귀자의 소설 '모순'을 소개하기 위해 제작되었습니다. 책에 대한 개인적인 감상과 독서 노트를 담고 있습니다.</p>
+        </div>
+        <div class="footer-links">
+            <h4>바로가기</h4>
+            <ul>
+                <li><a href="#intro">책 소개</a></li>
+                <li><a href="#toc">목차</a></li>
+                <li><a href="#notes">독서 노트</a></li>
+                <li><a href="#music">음악</a></li>
+                <li><a href="#characters">등장인물</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2025 책 소개 프로젝트</p>
+        <p>양귀자의 '모순'</p>
+    </div>
+</footer>
+
+<!-- 자바스크립트 -->
+<script>
+    // 스크롤 애니메이션
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElems = document.querySelectorAll('.fade-in');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        fadeElems.forEach(elem => {
+            observer.observe(elem);
+        });
+
+        // 스크롤 다운 버튼
+        const scrollDown = document.querySelector('.scroll-down');
+        const introSection = document.querySelector('#intro');
+
+        scrollDown.addEventListener('click', () => {
+            introSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // 다크 모드 토글
+        const darkModeToggle = document.querySelector('.dark-mode-toggle');
+        const body = document.body;
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+        });
+    });
+</script>
